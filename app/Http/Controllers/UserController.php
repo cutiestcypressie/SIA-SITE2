@@ -22,7 +22,7 @@ class UserController extends Controller
 
     public function getUsers()
     {
-        $users = DB::connection('mysql')->select("Select * from users");
+        $users = DB::connection('mysql')->select("Select * from tbluser");
         return $this->successResponse($users);
     }
 
