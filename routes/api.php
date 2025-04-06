@@ -2,8 +2,6 @@
 
 use App\Http\Controllers\UserController;
 
-// For GET all users
 Route::get('/users', [UserController::class, 'index']);
+Route::get('/users/{id}', [UserController::class, 'show']);
 
-// For POST (e.g., creating a user)
-Route::post('/users', [UserController::class, 'store']);

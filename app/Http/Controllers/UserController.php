@@ -21,7 +21,7 @@ class UserController extends Controller
 
     public function getUsers()
     {
-        $users = DB::connection('mysql')->select("Select * from users");
+        $users = DB::connection('mysql')->select("SELECT * FROM users");
         return $this->successResponse($users);
     }
 
@@ -31,7 +31,8 @@ class UserController extends Controller
         return $this->successResponse($users);
     }
 
-    public function add(Request $request ){
+    public function add(Request $request)
+    {
         $rules = [
             'username' => 'required|max:20',
             'password' => 'required|max:20',
@@ -39,16 +40,18 @@ class UserController extends Controller
             'jobid' => 'required|numeric|min:1|not_in:0',
         ];
 
-        $this->validate($request,$rules);
-        // the table tbluserjob
+        $this->validate($request, $rules);
+
+        // Ensure job exists in tbluserjob
         $userjob = UserJob::findOrFail($request->jobid);
+
         $user = User::create($request->all());
-        return $this->successResponse($user,Response::HTTP_CREATED);
+        return $this->successResponse($user, Response::HTTP_CREATED);
     }
 
     public function show($id)
     {
-        $user = User::findOrFail($id);
+        $user = User::where('userid', $id)->firstOrFail();
         return $this->successResponse($user);
     }
 
@@ -62,27 +65,30 @@ class UserController extends Controller
         ];
 
         $this->validate($request, $rules);
-        // validate if Jobid is found in the table tbluserjob
+
+        // Ensure job exists
         $userjob = UserJob::findOrFail($request->jobid);
-        $user = User::findOrFail($id);
+
+        // Get user by userid instead of default 'id'
+        $user = User::where('userid', $id)->firstOrFail();
         $user->fill($request->all());
 
-        // if no changes happen
         if ($user->isClean()) {
-            return $this->errorResponse('At least one value must change',
-            Response::HTTP_UNPROCESSABLE_ENTITY);
+            return $this->errorResponse(
+                'At least one value must change',
+                Response::HTTP_UNPROCESSABLE_ENTITY
+            );
         }
-        
+
         $user->save();
         return $this->successResponse($user);
     }
 
     public function delete($id)
     {
-        $user = User::findOrFail($id);
+        $user = User::where('userid', $id)->firstOrFail();
         $user->delete();
 
         return $this->successResponse('User deleted successfully');
     }
-
 }
