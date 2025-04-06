@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-
-use App\Models\User;
 use App\Models\UserJob;
+use App\Models\User;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use App\Traits\ApiResponser;
@@ -22,7 +21,7 @@ class UserController extends Controller
 
     public function getUsers()
     {
-        $users = DB::connection('mysql')->select("Select * from tbluser");
+        $users = DB::connection('mysql')->select("Select * from users");
         return $this->successResponse($users);
     }
 
@@ -32,19 +31,19 @@ class UserController extends Controller
         return $this->successResponse($users);
     }
 
-    public function addUser(Request $request)
-    {
+    public function add(Request $request ){
         $rules = [
             'username' => 'required|max:20',
             'password' => 'required|max:20',
             'gender' => 'required|in:Male,Female',
             'jobid' => 'required|numeric|min:1|not_in:0',
         ];
-        $this->validate($request, $rules);
 
+        $this->validate($request,$rules);
+        // the table tbluserjob
         $userjob = UserJob::findOrFail($request->jobid);
         $user = User::create($request->all());
-        return $this->successResponse($user, Response::HTTP_CREATED);
+        return $this->successResponse($user,Response::HTTP_CREATED);
     }
 
     public function show($id)
@@ -59,17 +58,21 @@ class UserController extends Controller
             'username' => 'max:20',
             'password' => 'max:20',
             'gender' => 'in:Male,Female',
-            'jobid' => 'numeric|min:1|not_in:0',
+            'jobid' => 'required|numeric|min:1|not_in:0',
         ];
 
         $this->validate($request, $rules);
+        // validate if Jobid is found in the table tbluserjob
         $userjob = UserJob::findOrFail($request->jobid);
         $user = User::findOrFail($id);
         $user->fill($request->all());
 
+        // if no changes happen
         if ($user->isClean()) {
-            return $this->errorResponse('At least one value must change', Response::HTTP_UNPROCESSABLE_ENTITY);
+            return $this->errorResponse('At least one value must change',
+            Response::HTTP_UNPROCESSABLE_ENTITY);
         }
+        
         $user->save();
         return $this->successResponse($user);
     }
@@ -83,4 +86,3 @@ class UserController extends Controller
     }
 
 }
-  
