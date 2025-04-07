@@ -1,6 +1,6 @@
 {
-    "name": "site1",
-    "description": "Site 1 API",
+    "name": "site2",
+    "description": "Site 2 API",
     "keywords": ["framework", "laravel", "lumen"],
     "license": "MIT",
     "type": "project",
