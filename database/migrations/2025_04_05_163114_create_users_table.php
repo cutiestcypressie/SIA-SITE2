@@ -12,8 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->id();
+            $table->id('userid');
+            $table->string('username', 20);
+            $table->string('password', 20);
+            $table->enum('gender', ['Male', 'Female']);
+            $table->unsignedBigInteger('jobid');
             $table->timestamps();
+
+            $table->foreign('jobid')->references('jobid')->on('tbluserjob');
         });
     }
 
