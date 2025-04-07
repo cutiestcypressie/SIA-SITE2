@@ -10,6 +10,7 @@ class User extends Model
     protected $primaryKey = 'userid'; // Important if your PK is not "id"
     public $incrementing = true; // Set to false if userid is NOT auto-incrementing
     protected $keyType = 'int'; // Use 'string' if your userid is not numeric
+    public $timestamps = false;  // Add this line to disable timestamps
 
     protected $fillable = [
         'username',
