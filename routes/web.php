@@ -14,5 +14,5 @@ $router->delete('/users/{id}', 'UserController@delete'); // delete record
 
 // User job routes
 $router->get('/usersjob', 'UserJobController@index');    // Get all jobs
-$router->get('/usersjob/{id}', 'UserJobController@show'); // Get job by ID
+$router->get('/userjob/{id}', 'UserJobController@show'); // Get job by ID
     
